@@ -3,7 +3,7 @@ package cmd
 import (
 	"log"
 
-	"fake-producer/cmd/kafka"
+	"fake-data-producer/cmd/kafka"
 
 	"github.com/spf13/cobra"
 )

@@ -5,9 +5,9 @@ import (
 	"strconv"
 	"time"
 
-	"fake-producer/pkg/models"
-	"fake-producer/pkg/queue"
-	"fake-producer/version"
+	"fake-data-producer/pkg/models"
+	"fake-data-producer/pkg/queue"
+	"fake-data-producer/version"
 
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"

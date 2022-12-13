@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fake-producer/cmd"
+	"fake-data-producer/cmd"
 )
 
 func main() {

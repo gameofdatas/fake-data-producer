@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"fake-producer/version"
+	"fake-data-producer/version"
 
 	"github.com/spf13/cobra"
 )
