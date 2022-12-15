@@ -24,7 +24,7 @@ go run main.go kafka \
     --security-protocol PLAINTEXT \
     --bootstrap-server localhost:9092 \
     --topic sampleTopic \
-    --nr-message 0 \
+    --nr-messages 0 \
     --max-waiting-time 0 \
     --model address
 ```
@@ -36,7 +36,7 @@ go run main.go kafka \
     --security-protocol SSL \
     --bootstrap-server localhost:9092 \
     --topic sampleTopic \
-    --nr-message 0 \
+    --nr-messages 0 \
     --max-waiting-time 0 \
     --model address
 ```
@@ -50,3 +50,40 @@ where
 - `max-waiting-time` : Max waiting time between messages (0 for none) in seconds
 - `model` : data models to produce
 
+#### Run application via docker
+
+```shell
+docker build -t fake-data-producer .
+
+docker run fake-data-producer kafka \ 
+    --security-protocol PLAINTEXT \
+    --bootstrap-server localhost:9092 \
+    --topic sampleTopic \
+    --nr-messages 0 \
+    --max-waiting-time 0 \
+    --model address
+```
+
+via **[docker-compose](docker-compose.yml)**
+
+It runs three services:
+- zookeeper
+- kafka
+- fake-data-producer
+
+```shell
+docker-compose -f docker-compose.yml up -d
+```
+
+![docker](images/docker-run-successfully.png)
+
+Let's check the data:
+
+```shell
+docker exec -it kafka /bin/sh
+cd opt/<kafka version>/bin
+kafka-topics.sh --list --zookeeper zookeeper:218
+kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic sampleTopic --from-beginning
+```
+
+![run](images/data.png)
