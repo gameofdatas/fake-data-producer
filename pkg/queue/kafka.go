@@ -13,6 +13,10 @@ type KafkaQueue struct {
 	cfg      *KafkaConfig
 }
 
+func (k *KafkaQueue) Flush(i int) int {
+	return k.producer.Flush(i)
+}
+
 func (k *KafkaQueue) Produce(key, value []byte) error {
 	msg := &kafka.Message{
 		TopicPartition: kafka.TopicPartition{

@@ -7,6 +7,7 @@ import (
 type Queue interface {
 	Produce([]byte, []byte) error
 	Close()
+	Flush(i int) int
 }
 
 func NewQueue(queue string, cfg interface{}) (Queue, error) {

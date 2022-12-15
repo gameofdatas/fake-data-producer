@@ -111,5 +111,6 @@ func cmd(_ *cobra.Command, _ []string) error {
 			break
 		}
 	}
+	producer.Flush(15 * 1000)
 	return nil
 }

@@ -22,6 +22,7 @@ services:
     build: .
     depends_on:
       - kafka
+      - zookeeper
     network_mode: host
     command:
       - "kafka"

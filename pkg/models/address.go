@@ -5,6 +5,7 @@ import (
 )
 
 type Address struct {
+	Id        string  `json:"id" xml:"id" fake:"{number:1001,1100}"`
 	Street    string  `json:"street" xml:"street" fake:"{street}"`
 	City      string  `json:"city" xml:"city" fake:"{city}"`
 	State     string  `json:"state" xml:"state" fake:"{state}"`

@@ -87,3 +87,20 @@ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic sampleTopic 
 ```
 
 ![run](images/data.png)
+
+### Data Models
+
+#### address
+
+```text
+{"id":"1098","street":"9806 Station furt","city":"Chandler","state":"California","zip":"68689","country":"Aruba","latitude":85.341363,"longitude":-13.611091}
+{"id":"1010","street":"131 New Lake ton","city":"Oklahoma ","state":"Connecticut","zip":"83629","country":"Germany","latitude":71.046268,"longitude":179.745551}
+{"id":"1073","street":"4883 North Vista town","city":"Omaha","state":"Arkansas","zip":"39504","country":"Turkmenistan","latitude":37.978425,"longitude":81.937671}
+{"id":"1046","street":"78552 East Keys side","city":"Henderson","state":"Georgia","zip":"44646","country":"Jordan","latitude":35.166294,"longitude":83.33641}
+{"id":"1099","street":"634 Square town","city":"Newark","state":"South Carolina","zip":"19963","country":"Germany","latitude":-78.26594,"longitude":-106.274358}
+{"id":"1039","street":"329 Lake Corners shire","city":"El Paso","state":"Ohio","zip":"89528","country":"Réunion","latitude":-28.468999,"longitude":142.784921}
+{"id":"1089","street":"90517 South Fork borough","city":"Laredo","state":"Illinois","zip":"95052","country":"Suriname","latitude":-43.701825,"longitude":108.197004}
+{"id":"1080","street":"2121 New Pass side","city":"Atlanta","state":"South Carolina","zip":"56516","country":"Cocos (Keeling) Islands","latitude":-33.157278,"longitude":49.749062}
+{"id":"1042","street":"45475 Drive haven","city":"Oklahoma ","state":"New Jersey","zip":"27126","country":"Pakistan","latitude":87.893807,"longitude":28.88553}
+{"id":"1057","street":"22438 View chester","city":"St. Paul","state":"Kansas","zip":"68935","country":"Dominican Republic","latitude":-55.825918,"longitude":35.243267}
+```
