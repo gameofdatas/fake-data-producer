@@ -18,3 +18,27 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_CREATE_TOPICS: "sampleTopic:1:1"
 
+  fake-data-producer:
+    build: .
+    depends_on:
+      - kafka
+      - zookeeper
+    network_mode: host
+    command:
+      - "kafka"
+      - "--security-protocol"
+      - "PLAINTEXT"
+      - "--bootstrap-server"
+      - "localhost:9092"
+      - "--topic"
+      - "sampleTopic"
+      - "--nr-messages"
+      - "5"
+      - "--max-waiting-time"
+      - "0"
+      - "--config-dir"
+      - "/config"
+      - "--file"
+      - "data.json"
+    volumes:
+      - "./conf/data.json:/config/data.json"
