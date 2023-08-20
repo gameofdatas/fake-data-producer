@@ -1,259 +1,30 @@
-## fake-data-producer
+# Fake Data Producer
 
-### Introduction
+The **Fake Data Producer** is a versatile tool designed to generate synthetic data for various purposes, such as testing, development, and data analysis. This command-line application empowers you to effortlessly create realistic datasets with customizable data types, ranges, and formats. Whether you're populating databases, validating software, or exploring data pipelines, the Fake Data Producer streamlines the process of generating diverse data that mimics real-world scenarios. With support for a wide range of data types and customization options, you can tailor your generated data to match your specific use case.
 
-The Fake Data Generator is a tool that allows you to generate synthetic/fake data based on a provided configuration. It leverages the Go programming language and the gofakeit library to generate various types of data such as names, addresses, numbers, and more.
+## Key Features
 
-### Features
+- **Configurable Data Generation:** Define your dataset's structure using an intuitive JSON configuration. Specify data types, ranges, and additional parameters to precisely control the generated content.
 
-- Generate fake data for various fields including strings, numbers, addresses, etc.
-- Support for custom field generators to generate specific types of data.
-- Configurable options for defining the range, precision, and other properties of generated data.
-- Easy-to-use JSON-based configuration file for specifying the data structure and generation options.
+- **Rich Data Types:** The Fake Data Producer supports various data types, including strings, integers, floating-point numbers, booleans, timestamps, and more. Customizable options like "options" for strings and "min/max" for numeric values offer fine-grained control.
 
-#### dependencies
-- [confluentic-kafka-go](https://github.com/confluentinc/confluent-kafka-go): kafka client to flush data to Kafka system
+- **Realistic Field Generators:** Leveraging the power of the gofakeit library, the Fake Data Producer employs sophisticated field generators to create authentic and diverse data for different columns.
+
+- **Dynamic Output Formats:** Generate data in multiple formats such as CSV, Kafka messages, or even directly to the console. Seamlessly integrate the generated data into your preferred workflows and systems.
+
+- **Easy Integration:** Integrate the Fake Data Producer into your development and testing processes using a simple command-line interface. Effortlessly generate datasets with a few commands, allowing you to focus on more critical aspects of your project.
+
+### dependencies
+
 - [gofakeit](https://github.com/brianvoe/gofakeit): Random data generator written in go
-
-### Prerequisite
-- docker
-- go
-- kafka
 
 ### Configuration
 
-The configuration file used for data generation consists of JSON key-value pairs, where the key represents the column name and the value defines the data type and additional parameters for generating data.
-
-#### JSON Key-Value Structure
-
-```json
-{
-  "ColumnName": "DataType",
-  "ColumnName2": {
-    "type": "DataType",
-    "min": minValue,
-    "max": maxValue,
-    "precision": decimalPrecision
-  },
-  ...
-}
-```
-
-Let's break down the different components of the JSON key-value structure:
-
-##### ColumnName
-The JSON key represents the name of the column for which data needs to be generated. It is a string that uniquely identifies the column in the generated data.
-
-##### DataType
-The JSON value represents the data type of the data to be produced for the corresponding column. It can take one of the following values:
-
-`"string"`: Generates a random string value. <br>
-`"int"`: Generates a random integer value.<br>
-`"float"`: Generates a random floating-point value.<br>
-`"bool"`: Generates a random boolean value.<br>
-
-For columns with simple data types like strings, integers, floats, and booleans, you only need to specify the data type as the JSON value.
-
-##### Additional Parameters (for Complex Data Types)
-For certain columns, you may want to customize the data generation by providing additional parameters. These parameters are specified as a JSON object with the following properties:
-
-`"type"`: The data type of the column. This property is required and can have the same values as mentioned above: "string", "int", "float", or "bool". <br>
-`"min"`: The minimum value allowed for the column. This property is optional and applicable only for numeric data types ("int" and "float"). It specifies the minimum value that can be generated. <br>
-`"max"`: The maximum value allowed for the column. This property is optional and applicable only for numeric data types ("int" and "float"). It specifies the maximum value that can be generated. <br>
-`"precision"`: The decimal precision for floating-point numbers. This property is optional and applicable only for the "float" data type. It specifies the number of decimal places to include in the generated value. <br>
-
-By providing these additional parameters, you can define custom rules for data generation, such as specifying value ranges or decimal precision.
-
-#### Example Configuration
-
-```json
-{
-  "Name": "string",
-  "Address": "string",
-  "Latitude": "float",
-  "Longitude": "float",
-  "UnitPrice": {
-    "type": "float",
-    "min": 2.23,
-    "max": 5.21,
-    "precision": 4
-  },
-  "Age": {
-    "type": "int",
-    "min": 20,
-    "max": 60
-  },
-  "Salary": {
-    "type": "int",
-    "min": 50000,
-    "max": 100000
-  }
-}
-```
-In the above example:
-
-The `"Name"` column will have randomly generated string values. <br>
-The `"Address"` column will have proper address values generated by the field generator. <br>
-The `"Latitude"` and `"Longitude"` columns will have proper latitude and longitude values generated by the field generator. <br>
-The `"UnitPrice"` column will have randomly generated floating-point values between 2.23 and 5.21, with a precision of 4 decimal places. <br>
-The `"Age"` column will have randomly generated
-
-### Field Generators
-
-- The Fake Data Producer uses field generators provided by the gofakeit library to generate realistic and diverse data. Field generators are functions that produce random values for specific data types or fields. The gofakeit library offers a wide range of field generators for different data types such as names, addresses, numbers, dates, and more.
-
-- You can take advantage of these field generators by utilizing them in your configuration file. When defining a column in the configuration, you can specify the data type and additional parameters (if applicable). The Fake Data Producer will use the appropriate field generator based on the data type to generate the corresponding data.
-
-- For example, if you have a column called "Name" with the data type set to "string", the Fake Data Producer will use the gofakeit library's name generator to produce random names for that column. Similarly, for columns with data types like "address" or "latitude", the Fake Data Producer will use the respective field generators to generate realistic addresses or latitude values.
-
-- You can also create your own custom field generators if the gofakeit library doesn't provide a specific generator that meets your requirements. Custom field generators allow you to generate data based on your own logic and rules. You can integrate them into the Fake Data Producer by extending the gofakeit library's functionality or by implementing your own generator functions.
-
-For more information on available field generators and how to create custom generators, refer to the documentation of the gofakeit library.
+[here](conf/readme.md)
 
 ### Usage
 
-The application can be run with following ways:
+- [kafka producer](cmd/kafka/readme.md)
+- [csv producer](cmd/csv/readme.md)
+- [console_producer](cmd/console/readme.md)
 
-with `PLAINTEXT` as security-protocol:
-
-```shell
-go run main.go kafka \
-    --security-protocol PLAINTEXT \
-    --bootstrap-server localhost:9092 \
-    --topic sampleTopic \
-    --nr-messages 0 \
-    --max-waiting-time 0 \
-    --config-dir /config \
-    --file config.json
-```
-
-with `SSL` as security-protocol:
-
-```shell
-go run main.go kafka \
-    --security-protocol SSL \
-    --bootstrap-server localhost:9092 \
-    --topic sampleTopic \
-    --nr-messages 0 \
-    --max-waiting-time 0 \
-    --config-dir /config \
-    --file config.json
-```
-
-where
-
-- `security-protocol` : Security protocol for Kafka (PLAINTEXT, SSL, SASL_SSL)
-- `bootstrap-server` : Kafka bootstrap server
-- `topic` : Topic name
-- `nr-messages` : Number of messages to produce (0 for unlimited)
-- `max-waiting-time` : Max waiting time between messages (0 for none) in seconds
-- `config-dir` : Directory path of the config file
-- `file` : Name of the config file
-
-#### Run application via docker
-
-```shell
-docker build -t fake-data-producer .
-
-docker run fake-data-producer kafka \ 
-    --security-protocol PLAINTEXT \
-    --bootstrap-server localhost:9092 \
-    --topic sampleTopic \
-    --nr-messages 0 \
-    --max-waiting-time 0 \
-    --config-dir /config \
-    --file config.json
-```
-
-via **[docker-compose](docker-compose.yml)**
-
-It runs three services:
-- zookeeper
-- kafka
-- fake-data-producer
-
-```shell
-docker-compose -f docker-compose.yml up -d
-```
-
-![docker](images/docker-run-successfully.png)
-
-Let's check the data:
-
-```shell
-docker exec -it kafka /bin/sh
-cd opt/<kafka version>/bin
-kafka-topics.sh --list --zookeeper zookeeper:218
-kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic sampleTopic --from-beginning
-```
-
-### Results
-
-```json
-{
-  "Name": "string",
-  "Address": "string",
-  "Latitude": "float",
-  "Longitude": "float",
-  "UnitPrice": {
-    "type": "float",
-    "min": 2.23,
-    "max": 5.21,
-    "precision": 4
-  },
-  "Age": {
-    "type": "int",
-    "min": 20,
-    "max": 60
-  },
-  "Salary": {
-    "type": "int",
-    "min": 50000,
-    "max": 100000
-  }
-}
-```
-
-Based on the provided configuration, the tool generates fake data for each column and publishes it to the specified Kafka topic. The data will resemble the following format:
-
-```json lines
-{"Address":"9739 Port Expressway land, Arlington, Alabama 79133","Latitude":-37.019429,"Longitude":-60.596162,"UnitPrice":2.9891,"Age":55,"Salary":93747,"Name":"Caitlyn Schoen"}
-{"Address":"949 New Land stad, San Bernardino, New Hampshire 64383","Latitude":73.236759,"Longitude":-41.659942,"UnitPrice":3.7283,"Age":41,"Salary":72975,"Name":"Irving Steuber"}
-{"Address":"67198 New Grove borough, Plano, Iowa 55755","Latitude":-33.937051,"Longitude":-73.97081,"UnitPrice":2.6237,"Age":52,"Salary":99421,"Name":"Freeda Fritsch"}
-{"Address":"732 Brook fort, Birmingham, Oregon 21442","Latitude":19.588974,"Longitude":50.488188,"UnitPrice":4.3512,"Age":44,"Salary":92524,"Name":"Jovany Larkin"}
-{"Address":"8529 New Plains ville, Boston, Texas 69697","Latitude":48.786975,"Longitude":150.901156,"UnitPrice":3.5688,"Age":37,"Salary":88505,"Name":"Wellington Walker"}
-```
-
-### Contribution
-
-Contributions are welcome! If you'd like to contribute to the Fake Data Producer project, please follow these steps:
-
-1. Fork the repository on GitHub.
-2. Clone your forked repository to your local machine.
-3. Create a new branch for your changes.
-4. Make your desired changes to the codebase.
-5. Test your changes to ensure they work as expected.
-6. Commit your changes with a descriptive commit message.
-7. Push your changes to your forked repository.
-8. Open a pull request on the original repository.
-9. Wait for the maintainers to review your pull request. They may provide feedback or request further changes.
-10. Once your pull request is approved, it will be merged into the main repository.
-
-Thank you for considering contributing to the Fake Data Producer project! Your contributions help improve the tool and make it more useful for the community. If you have any questions or need assistance, feel free to reach out to the maintainers.
-
-### License
-
-The Fake Data Producer is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
-
-The MIT License is a permissive open-source license that allows you to use, modify, and distribute the software for any purpose. It provides you with the freedom to adapt the tool to your needs, incorporate it into other projects (commercial or non-commercial), and make changes as necessary. However, it comes with no warranty or liability.
-
-You are free to use the Fake Data Producer for personal or commercial purposes. If you make any modifications to the tool, we encourage you to contribute back to the project by opening a pull request (see the "Contribution" section for more information).
-
-Please review the full text of the MIT License in the [LICENSE](LICENSE) file for the complete terms and conditions.
-
-
-### Conclusion
-
-The Fake Data Producer is a powerful tool for generating synthetic/fake data based on a configuration file. It provides flexibility in defining the data structure and customization options. You can easily integrate it into your data generation pipelines or testing environments to generate realistic and diverse datasets.
-
-Feel free to customize the tool according to your specific requirements and use cases. Happy data generation!
