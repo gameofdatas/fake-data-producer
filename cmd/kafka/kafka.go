@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"fake-data-producer/config"
-	"fake-data-producer/pkg/models"
-	"fake-data-producer/pkg/queue"
+	"fake-data-producer/pkg/fakedata"
+	"fake-data-producer/pkg/writer"
 	"fake-data-producer/version"
 
 	"github.com/rs/zerolog/log"
@@ -68,18 +68,16 @@ func cmd(_ *cobra.Command, _ []string) error {
 		return fmt.Errorf("error reading config file: %w", err)
 	}
 
-	kafkaConfig := &queue.KafkaConfig{
+	kafkaConfig := &writer.KafkaConfig{
 		BootstrapServer:  bootstrapServer,
 		SaslMechanism:    saslMechanism,
 		CertFolder:       certFolder,
 		Username:         username,
 		Password:         password,
-		NumOfMessage:     nrMessage,
-		MaxWaitTime:      maxWaitingTime,
 		SecurityProtocol: securityProtocol,
 		Topic:            topic,
 	}
-	producer, err := queue.NewQueue("kafka", kafkaConfig)
+	producer, err := writer.NewWriter("kafka", kafkaConfig)
 	if err != nil {
 		return fmt.Errorf("cannot create producer: %w", err)
 	}
@@ -90,8 +88,10 @@ func cmd(_ *cobra.Command, _ []string) error {
 	if err != nil {
 		return err
 	}
-	dataStruct := models.CreateStructFromJSON(configData)
-
+	dataStruct, err := fakedata.CreateStructFromJSON(configData)
+	if err != nil {
+		return err
+	}
 	count := 0
 	waitTime := time.Duration(0)
 	if maxWaitingTime != "" {
@@ -110,15 +110,15 @@ func cmd(_ *cobra.Command, _ []string) error {
 		defer ticker.Stop()
 
 		for range ticker.C {
-			key, value, err := models.CreateData(dataStruct, configData)
+			key, value, err := fakedata.CreateData(dataStruct, configData)
 			if err != nil {
 				return fmt.Errorf("error creating data: %w", err)
 			}
+
 			err = producer.Produce(key, value)
 			if err != nil {
 				return fmt.Errorf("producing error: %w", err)
 			}
-
 			count++
 			if !goInfinite && count == messageCount {
 				break
@@ -126,7 +126,7 @@ func cmd(_ *cobra.Command, _ []string) error {
 		}
 	} else {
 		for {
-			key, value, err := models.CreateData(dataStruct, configData)
+			key, value, err := fakedata.CreateData(dataStruct, configData)
 			if err != nil {
 				return fmt.Errorf("error creating data: %w", err)
 			}

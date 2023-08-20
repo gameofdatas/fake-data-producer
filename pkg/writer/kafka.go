@@ -1,4 +1,4 @@
-package queue
+package writer
 
 import (
 	"strings"
@@ -50,7 +50,7 @@ func (k *KafkaQueue) Close() {
 
 // newKafkaWriter creates a new Kafka message queue writer based on the provided KafkaConfig.
 // It returns a Queue interface and an error if any.
-func newKafkaWriter(cfg *KafkaConfig) (Queue, error) {
+func newKafkaWriter(cfg *KafkaConfig) (WriterInterface, error) {
 	p, err := kafka.NewProducer(createKafkaConfig(cfg))
 
 	return &KafkaQueue{

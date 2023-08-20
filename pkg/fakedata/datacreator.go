@@ -1,7 +1,8 @@
-package models
+package fakedata
 
 import (
 	"encoding/json"
+	"fmt"
 	"reflect"
 )
 
@@ -21,57 +22,61 @@ func CreateData(dataStruct interface{}, conf map[string]interface{}) (key []byte
 
 // CreateStructFromJSON creates a Go struct from a JSON representation.
 // It takes a map[string]interface{} jsonData and returns the created struct.
-func CreateStructFromJSON(jsonData map[string]interface{}) interface{} {
-	// Initialize an empty slice of struct fields
+func CreateStructFromJSON(jsonData map[string]interface{}) (interface{}, error) {
 	fields := make([]reflect.StructField, 0)
 
-	// Iterate over the jsonData map
 	for key, value := range jsonData {
-		// Determine the field type based on the value
-		fieldType := determineFieldType(value)
-		// Create a new struct field
+		fieldType, err := determineFieldType(value)
+		if err != nil {
+			return nil, err
+		}
+
 		field := reflect.StructField{
 			Name: key,
 			Type: fieldType,
 		}
 
-		// Append the field to the fields slice
 		fields = append(fields, field)
 	}
 
-	// Create a new struct type based on the collected fields
 	structType := reflect.StructOf(fields)
+	if structType == nil {
+		return nil, fmt.Errorf("failed to create struct type")
+	}
 
-	// Create a new instance of the struct and return it
-	return reflect.New(structType).Interface()
+	return reflect.New(structType).Interface(), nil
 }
 
-// determineFieldType determines the reflect.Type based on the provided value.
-// It supports string, float, bool, int, and nested maps.
-// If the type cannot be determined, it returns reflect.TypeOf(nil).
-func determineFieldType(value interface{}) reflect.Type {
+func determineFieldType(value interface{}) (reflect.Type, error) {
 	switch t := value.(type) {
 	case string:
 		switch t {
 		case "string":
-			return reflect.TypeOf("")
+			return reflect.TypeOf(""), nil
 		case "float":
-			return reflect.TypeOf(float64(0))
+			return reflect.TypeOf(float64(0)), nil
 		case "bool":
-			return reflect.TypeOf(false)
+			return reflect.TypeOf(false), nil
 		case "int":
-			return reflect.TypeOf(int64(0))
+			return reflect.TypeOf(int64(0)), nil
 		}
 	case map[string]interface{}:
 		fieldMap := value.(map[string]interface{})
 		if fieldType, ok := fieldMap["type"].(string); ok {
-			if fieldType == "int" {
-				return reflect.TypeOf(int64(0))
-			} else if fieldType == "float" {
-				return reflect.TypeOf(float64(0))
+			switch fieldType {
+			case "string":
+				return reflect.TypeOf(""), nil
+			case "int":
+				return reflect.TypeOf(int64(0)), nil
+			case "float":
+				return reflect.TypeOf(float64(0)), nil
+			case "timestamp":
+				return reflect.TypeOf(""), nil
+			case "epoch":
+				return reflect.TypeOf(int64(0)), nil
 			}
 		}
 	}
 
-	return reflect.TypeOf(nil)
+	return reflect.TypeOf(nil), fmt.Errorf("unsupported field type")
 }

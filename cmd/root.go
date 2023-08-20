@@ -3,6 +3,8 @@ package cmd
 import (
 	"log"
 
+	console "fake-data-producer/cmd/console"
+	csv "fake-data-producer/cmd/csv"
 	"fake-data-producer/cmd/kafka"
 
 	"github.com/spf13/cobra"
@@ -25,4 +27,6 @@ func Execute() {
 func init() {
 	cobra.OnInitialize()
 	rootCmd.AddCommand(kafka.RunCmd)
+	rootCmd.AddCommand(csv.RunCmd)
+	rootCmd.AddCommand(console.RunCmd)
 }

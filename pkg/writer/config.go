@@ -1,4 +1,4 @@
-package queue
+package writer
 
 type KafkaConfig struct {
 	BootstrapServer  string
@@ -6,8 +6,11 @@ type KafkaConfig struct {
 	CertFolder       string
 	Username         string
 	Password         string
-	NumOfMessage     string
-	MaxWaitTime      string
 	SecurityProtocol string
 	Topic            string
+}
+
+type CSVConfig struct {
+	Path     string
+	FileName string
 }
