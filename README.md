@@ -76,4 +76,63 @@ sample config
   - [console_producer](cmd/console/readme.md)
 
 - **Easy Integration:** Integrate the Fake Data Producer into your development and testing processes using a simple command-line interface. Effortlessly generate datasets with a few commands, allowing you to focus on more critical aspects of your project.
-___
+
+## Running via Docker
+
+The Fake Data Producer can be conveniently run using Docker, allowing you to quickly generate synthetic data without worrying about installing dependencies or configuring your environment. Follow these steps to run the Fake Data Producer using Docker:
+
+### 1. Build the Docker Image
+
+Before running the Fake Data Producer, you need to build the Docker image. Open a terminal and navigate to the root directory of the project. Then, run the following command:
+
+```bash
+docker build -t fake-data-producer .
+
+or 
+
+make build (make should be installed)
+```
+
+This will build the Docker image with the tag `fake-data-producer`.
+
+### 2. Prepare Your Configuration File
+
+Create or prepare a configuration JSON file (e.g., `data.json`) that defines the structure and data types for your generated dataset. You can customize this configuration file based on your requirements.
+
+### 3. Run the Fake Data Producer
+
+To run the Fake Data Producer using Docker, use the following command:
+
+```bash
+docker run -it -v /path/to/your/config/dir:/config fake-data-producer console --config-dir /config --file data.json --nr-messages 10
+
+or
+
+make run-console CONFIG_DIR=${PWD}/conf CONFIG_FILE=data.json NUM_MESSAGES=10
+```
+
+Replace `/path/to/your/config/dir` with the actual path to the directory containing your configuration JSON file. You can also adjust the `data.json` and `--nr-messages` values as needed.
+
+### 4. Generated Data
+
+The Fake Data Producer will generate synthetic data based on the configuration you provided. The generated data will be displayed in the console output.
+
+### Cleaning Up
+
+After you're done generating data, you can clean up the Docker image by running:
+
+```bash
+docker rmi fake-data-producer
+
+or 
+
+make clean
+```
+
+This will remove the Docker image used for running the Fake Data Producer.
+
+By following these steps, you can easily generate synthetic data using the Fake Data Producer within a Docker container, making it a convenient and isolated environment for data generation.
+
+**Note:** Make sure you have Docker installed on your machine before running the above commands.
+
+---
